@@ -7,16 +7,16 @@ Esse projeto contém um bot feito com package Selenium no SDK .NET 9 com C# Cons
 1. Na linha 11 do arquivo *Program.cs* altere a variável originalProfilePath com seu USUARIO e a pasta do Windows onde os dados do perfil se encontram após ter se logado préviamente no Google Chrome pelo menos uma vez e fechado o browser na sequência. Pode estar na pasta Default, Profle 1 ou Profile 2, etc. Se tiver dúvidas, acesse o link chrome://version pelo próprio navegador para identificar e mude o final do path.
 Na linha 13 do arquivo *Program.cs* também altere a localização onde clonou o projeto na sua máquina.
 
-    ```csharp
-    static string originalProfilePath = @"C:\Users\USUARIO\AppData\Local\Google\Chrome\User Data\Profile 2";
+```csharp
+static string originalProfilePath = @"C:\Users\USUARIO\AppData\Local\Google\Chrome\User Data\Profile 2";
 
-    static string clonedProfilePath = @"C:\GitHub\SeleniumBotNet9\ChromeUserData";
-    ```
+static string clonedProfilePath = @"C:\GitHub\SeleniumBotNet9\ChromeUserData";
+```
 2. Na linha 30 do arquivo *Program.cs* valide a localização da instalação do seu Google Chrome no Windows.
 
-    ```csharp
-    options.BinaryLocation = @"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe";
-    ```
+```csharp
+options.BinaryLocation = @"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe";
+```
 
 3. Na pasta SeleniumBot navegue via comando "cd" até o arquivo *Program.cs* e execute o comando abaixo,
 
