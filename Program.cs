@@ -53,7 +53,7 @@ class Program
                 wait.Until(d => ((IJavaScriptExecutor)d).ExecuteScript("return document.readyState").Equals("complete"));
 
                 Console.WriteLine("Página carregada.");
-                Thread.Sleep(5000);
+                Thread.Sleep(10000);
 
                 string xpathBotaoX = "/html/body/c-wiz/div/div[2]/c-wiz/c-wiz/div/div[1]/c-wiz[1]/div/div/div[1]/div[2]/div/button";
                 int contador = 0;
