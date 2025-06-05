@@ -21,7 +21,7 @@ options.BinaryLocation = @"C:\Program Files (x86)\Google\Chrome\Application\chro
 3. Na pasta SeleniumBot navegue via comando "cd" até o arquivo *Program.cs* e execute o comando abaixo,
 
 ```console
-dotnet run
+dotnet run .\Program.cs
 ```
 
 4. Na primeiro execução, entre em sua conta no Browser que foi aberto e faça o login na sua conta Google normalmente, após isso irá gerar a pasta ChromeUserData dentro do próprio projeto, é um clone do seu perfil, feito isso, pode fechar o Browser.
@@ -39,5 +39,5 @@ chrome.exe --user-data-dir=\"{clonedProfilePath}\" --profile-directory=Default
 6. Execute novamente o projeto, aguarde um pouco até a ida para a url https://myactivity.google.com/page?hl=pt_BR&page=youtube_comment_likes&pli=1 e a exclusão de comentários deve iniciar. Em caso de falha, rode o programa novamente e deixa o browser e VS Code abertos sem interação para que não interrompa o processo.
 
 ```console
-dotnet run
+dotnet run .\Program.cs
 ```
