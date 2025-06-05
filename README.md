@@ -1,4 +1,4 @@
-# SeleniumBot 2025 Delete Youtube likes on comments My Google Activity .NET 9 C# on Windows
+# SeleniumBot 2025: Delete Youtube likes on comments My Google Activity .NET 9 C# on Windows with VS Code
 
 Esse projeto contém um bot feito com package Selenium no SDK .NET 9 com C# Console Application, que abre o Google Chrome na conta prévia logada pelo usuário, acessa a página de likes em comentários do Youtube e deleta manualmente um por um, já que essa função ainda não existe.
 
@@ -36,7 +36,7 @@ cd C:\Users\USUARIO\AppData\Local\Google\Chrome\
 chrome.exe --user-data-dir=\"{clonedProfilePath}\" --profile-directory=Default
 ```
 
-6. Execute novamente o projeto, aguarde um pouco até a ida para a url https://myactivity.google.com/page?hl=pt_BR&page=youtube_comment_likes&pli=1 e a exclusão de comentários deve iniciar. Em caso de falha, rode o programa novamente e deixa o browser e VS Code abertos sem interação para que não interrompa o processo.
+6. Execute novamente o projeto, aguarde um pouco até a ida para a url https://myactivity.google.com/page?hl=pt_BR&page=youtube_comment_likes&pli=1 e a exclusão de comentários deve iniciar. Em caso de falha, rode o programa novamente e deixe o browser e VS Code abertos sem interação para que não interrompa o processo. Se a página do Google demorar mais que 30 segundos para carregar os likes, limpe o histórico pelo browser ou pela ferramenta da loja de apps da Microsoft "PC Manager".
 
 ```console
 dotnet run .\Program.cs
