@@ -45,7 +45,7 @@ class Program
 
                 Thread.Sleep(5000);
 
-                string url = "https://myactivity.google.com/page?hl=pt_BR&page=youtube_comment_likes&pli=1";
+                string url = "https://myactivity.google.com/page?hl=pt_BR&page=youtube_comment_likes";
                 Console.WriteLine($"Navegando para {url}");
                 driver.Navigate().GoToUrl(url);
 
@@ -53,7 +53,9 @@ class Program
                 wait.Until(d => ((IJavaScriptExecutor)d).ExecuteScript("return document.readyState").Equals("complete"));
 
                 Console.WriteLine("Página carregada.");
-                Thread.Sleep(30000);
+
+                // Espera 1 minuto para a lista de comentários carregar
+                Thread.Sleep(60000);
 
                 string xpathBotaoX = "/html/body/c-wiz/div/div[2]/c-wiz/c-wiz/div/div[1]/c-wiz[1]/div/div/div[1]/div[2]/div/button";
                 int contador = 0;
