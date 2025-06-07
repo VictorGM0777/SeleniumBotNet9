@@ -79,28 +79,32 @@ class Program
                     return;
                 }
 
-                // Scroll até o botão com JavaScript
-                ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView({ behavior: 'smooth', block: 'center' });", botaoX);
-
-                // Espera um momento após scroll
-                Thread.Sleep(1000);
-
                 int contador = 0;
 
                 while (true)
                 {
                     try
                     {
+                        // Reencontra o botão a cada iteração
+                        botaoX = wait.Until(driver =>
+                        {
+                            var element = driver.FindElement(By.XPath(xpathBotaoX));
+                            return (element.Displayed && element.Enabled) ? element : null;
+                        });
+
+                        // Scroll até o botão com JavaScript
+                        ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView({ behavior: 'smooth', block: 'center' });", botaoX);
+                        Thread.Sleep(1000);
+
                         // botaoX.Click();
 
-                        // Clique via JavaScript para evitar element not interactable
+                        // Clique via JavaScript
                         ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", botaoX);
 
                         contador++;
                         Console.WriteLine($"[{contador}] Botão de deletar clicado.");
 
-                        // Espera para a página atualizar após o clique
-                        Thread.Sleep(3000);
+                        Thread.Sleep(3000); // Aguarda a atualização da interface
                     }
                     catch (WebDriverTimeoutException)
                     {
@@ -116,6 +120,7 @@ class Program
                     {
                         Console.WriteLine("Elemento stale detectado, tentando novamente...");
                         Thread.Sleep(1000);
+                        continue; // volta ao início do loop para tentar reencontrar o botão
                     }
                     catch (NoSuchElementException)
                     {
