@@ -24,12 +24,12 @@ options.BinaryLocation = @"C:\Program Files (x86)\Google\Chrome\Application\chro
 dotnet run .\Program.cs
 ```
 
-4. Na primeiro execução, entre em sua conta no Browser que foi aberto e faça o login na sua conta Google normalmente, após isso irá gerar a pasta ChromeUserData dentro do próprio projeto, é um clone do seu perfil, feito isso, pode fechar o Browser.
+4. Na primeiro execução irá gerar a pasta ChromeUserData dentro do próprio projeto, é um clone do seu perfil, feito isso, siga as instruções do Console ou do passo 5.
 
-5. Agora, abra o Chrome com este perfil para fazer login manualmente via CMD:
+5. Agora, navegue via CMD/Prompt de comando até o executável do Chrome e execute o comando em sequência para abrir. Logue com seu perfil manualmente e depois feche o browser.
 
 ```console
-cd C:\Users\USUARIO\AppData\Local\Google\Chrome\
+cd C:\Program Files (x86)\Google\Chrome\Application
 ```
 
 ```console

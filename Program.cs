@@ -62,7 +62,7 @@ class Program
                 try
                 {
                     // Espera até 90 segundos
-                    wait.Timeout = TimeSpan.FromSeconds(90); 
+                    wait.Timeout = TimeSpan.FromSeconds(180); 
 
                     // Espera até o botão estar presente e clicável
                     botaoX = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(By.XPath(xpathBotaoX)));
