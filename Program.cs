@@ -57,11 +57,15 @@ class Program
                 Console.WriteLine("Aguardando botão de deletar ficar disponível...");
 
                 string xpathBotaoX = "/html/body/c-wiz/div/div[2]/c-wiz/c-wiz/div/div[1]/c-wiz[1]/div/div/div[1]/div[2]/div/button";
+                IWebElement botaoX;
 
                 try
                 {
-                    wait.Timeout = TimeSpan.FromSeconds(90); // espera até 90 segundos
-                    wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(By.XPath(xpathBotaoX)));
+                    // Espera até 90 segundos
+                    wait.Timeout = TimeSpan.FromSeconds(90); 
+
+                    // Espera até o botão estar presente e clicável
+                    botaoX = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(By.XPath(xpathBotaoX)));
                     Console.WriteLine("Botão de deletar encontrado, iniciando processo...");
                 }
                 catch (WebDriverTimeoutException)
@@ -76,9 +80,6 @@ class Program
                 {
                     try
                     {
-                        // Espera até o botão estar presente e clicável
-                        wait.Timeout = TimeSpan.FromSeconds(10);
-                        var botaoX = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(By.XPath(xpathBotaoX)));
                         botaoX.Click();
                         contador++;
                         Console.WriteLine($"[{contador}] Botão de deletar clicado.");
@@ -88,7 +89,7 @@ class Program
                     }
                     catch (WebDriverTimeoutException)
                     {
-                        Console.WriteLine("Nenhum botão restante ou timeout ao encontrar botão. Lista esvaziada.");
+                        Console.WriteLine("Nenhum botão restante. Lista esvaziada.");
                         break;
                     }
                     catch (ElementClickInterceptedException ex)
