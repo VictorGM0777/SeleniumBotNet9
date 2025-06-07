@@ -54,10 +54,22 @@ class Program
 
                 Console.WriteLine("Página carregada.");
 
-                // Espera 1 minuto e 15seg para a lista de comentários carregar
-                Thread.Sleep(75000);
+                Console.WriteLine("Aguardando botão de deletar ficar disponível...");
 
                 string xpathBotaoX = "/html/body/c-wiz/div/div[2]/c-wiz/c-wiz/div/div[1]/c-wiz[1]/div/div/div[1]/div[2]/div/button";
+
+                try
+                {
+                    wait.Timeout = TimeSpan.FromSeconds(90); // espera até 90 segundos
+                    wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(By.XPath(xpathBotaoX)));
+                    Console.WriteLine("Botão de deletar encontrado, iniciando processo...");
+                }
+                catch (WebDriverTimeoutException)
+                {
+                    Console.WriteLine("O botão de deletar não apareceu dentro do tempo esperado.");
+                    return;
+                }
+
                 int contador = 0;
 
                 while (true)
