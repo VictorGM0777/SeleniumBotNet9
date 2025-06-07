@@ -36,7 +36,7 @@ cd C:\Users\USUARIO\AppData\Local\Google\Chrome\
 chrome.exe --user-data-dir=\"{clonedProfilePath}\" --profile-directory=Default
 ```
 
-6. Execute novamente o projeto, aguarde um pouco até a ida para a url https://myactivity.google.com/page?hl=pt_BR&page=youtube_comment_likes&pli=1 e a exclusão de comentários deve iniciar. Em caso de falha, rode o programa novamente e deixe o browser e VS Code abertos sem interação para que não interrompa o processo. Se a página do Google demorar mais que 30 segundos para carregar os likes, limpe o histórico pelo browser ou pela ferramenta da loja de apps da Microsoft "PC Manager".
+6. Execute novamente o projeto, aguarde um pouco até a ida para a url https://myactivity.google.com/page?hl=pt_BR&page=youtube_comment_likes&pli=1 e a exclusão de comentários deve iniciar. Em caso de falha, rode o programa novamente e deixe o browser e VS Code abertos sem interação para que não interrompa o processo. Se a página do Google demorar mais que 90 segundos para carregar os likes, limpe o histórico pelo browser ou pela ferramenta da loja de apps da Microsoft "PC Manager" e abra manualmente ela antes de executar essa aplicação para garantir que os likes em comentários estão carregando.
 
 ```console
 dotnet run .\Program.cs
