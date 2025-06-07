@@ -54,8 +54,8 @@ class Program
 
                 Console.WriteLine("Página carregada.");
 
-                // Espera 1 minuto e 30seg para a lista de comentários carregar
-                Thread.Sleep(90000);
+                // Espera 1 minuto e 15seg para a lista de comentários carregar
+                Thread.Sleep(75000);
 
                 string xpathBotaoX = "/html/body/c-wiz/div/div[2]/c-wiz/c-wiz/div/div[1]/c-wiz[1]/div/div/div[1]/div[2]/div/button";
                 int contador = 0;
