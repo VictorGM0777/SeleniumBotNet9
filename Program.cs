@@ -65,7 +65,12 @@ class Program
                     wait.Timeout = TimeSpan.FromSeconds(180); 
 
                     // Espera até o botão estar presente e clicável
-                    botaoX = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(By.XPath(xpathBotaoX)));
+                    botaoX = wait.Until(driver =>
+                    {
+                        var element = driver.FindElement(By.XPath(xpathBotaoX));
+                        return (element.Displayed && element.Enabled) ? element : null;
+                    });
+
                     Console.WriteLine("Botão de deletar encontrado, iniciando processo...");
                 }
                 catch (WebDriverTimeoutException)
@@ -74,13 +79,23 @@ class Program
                     return;
                 }
 
+                // Scroll até o botão com JavaScript
+                ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView({ behavior: 'smooth', block: 'center' });", botaoX);
+
+                // Espera um momento após scroll
+                Thread.Sleep(1000);
+
                 int contador = 0;
 
                 while (true)
                 {
                     try
                     {
-                        botaoX.Click();
+                        // botaoX.Click();
+
+                        // Clique via JavaScript para evitar element not interactable
+                        ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", botaoX);
+
                         contador++;
                         Console.WriteLine($"[{contador}] Botão de deletar clicado.");
 
