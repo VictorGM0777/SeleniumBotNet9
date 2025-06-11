@@ -61,8 +61,8 @@ class Program
 
                 try
                 {
-                    // Espera até 360 segundos/6min
-                    wait.Timeout = TimeSpan.FromSeconds(360); 
+                    // Espera até 7 min
+                    wait.Timeout = TimeSpan.FromMinutes(7); 
 
                     // Espera até o botão estar presente e clicável
                     botaoX = wait.Until(driver =>
