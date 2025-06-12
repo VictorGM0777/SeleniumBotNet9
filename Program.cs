@@ -4,8 +4,8 @@ using OpenQA.Selenium.Support.UI;
 
 class Program
 {
-    static string originalProfilePath = @"C:\Users\USUARIO\AppData\Local\Google\Chrome\User Data\Profile 2";
-    static string clonedProfilePath = @"C:\GitHub\SeleniumBotNet9\ChromeUserData";
+    static readonly string originalProfilePath = @"C:\Users\USUARIO\AppData\Local\Google\Chrome\User Data\Profile 2";
+    static readonly string clonedProfilePath = @"C:\GitHub\SeleniumBotNet9\ChromeUserData";
 
     static async Task Main(string[] args)
     {
@@ -78,8 +78,7 @@ class Program
                 WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
                 wait.Until(d =>
                 {
-                    var readyState = ((IJavaScriptExecutor)d).ExecuteScript("return document.readyState") as string;
-                    return readyState != null && readyState.Equals("complete", StringComparison.OrdinalIgnoreCase);
+                    return ((IJavaScriptExecutor)d).ExecuteScript("return document.readyState") is string readyState && readyState.Equals("complete", StringComparison.OrdinalIgnoreCase);
                 });
                 Console.WriteLine("Aguardando botão de deletar ficar disponível...");
 

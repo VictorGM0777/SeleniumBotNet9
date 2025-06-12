@@ -1,60 +1,74 @@
-# SeleniumBot 2025: Delete Youtube likes on comments My Google Activity .NET 9 C# on Windows with VS Code and Google Chrome
-# SeleniumBot 2025: Deletar likes/gostei em comentários do Youtube na página My Google Activity usando .NET 9 C# no Windows com VS Code e Google Chrome
+# SeleniumBot 2025: Delete YouTube Likes on Comments via My Google Activity – .NET 9 C# on Windows with VS Code and Google Chrome
 
-Esse projeto contém um bot feito com package Selenium no SDK .NET 9 com C# Console Application, que abre o Google Chrome na conta prévia logada pelo usuário, acessa a página de likes em comentários do Youtube e deleta manualmente um por um, já que essa função ainda não existe.
+This project contains a bot built using the Selenium package on the .NET 9 SDK with a C# Console Application. It opens Google Chrome using a previously logged-in user account, navigates to the YouTube comment likes section on the My Google Activity page, and manually deletes each like, since Google does not currently offer a built-in feature for this action.
 
-Dependência: SDK .NET 9
-[.NET](https://dotnet.microsoft.com/pt-br/download/dotnet/9.0)
+## Requirements
 
-IDE: Visual Studio Code
-[VSCode](https://code.visualstudio.com/download)
+- .NET SDK 9  
+  [Download .NET 9](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
 
-## Rodando o código pelo Visual Studio Code após instalação do .NET 9 SDK
+- IDE: Visual Studio Code  
+  [Download VSCode](https://code.visualstudio.com/download)
 
-1. Instale o Selenium e o driver específico para o navegador Chrome via Terminal:
+## Running the Bot in Visual Studio Code (after installing the .NET 9 SDK)
 
-```console
-dotnet add package Selenium.WebDriver
-```
+1. Install Selenium and the Chrome WebDriver via terminal:
 
-```console
-dotnet add package Selenium.WebDriver.ChromeDriver
-```
+   ```bash
+   dotnet add package Selenium.WebDriver
+   ```
 
-2. Na linha 11 do arquivo *Program.cs* altere a variável originalProfilePath com seu USUARIO e a pasta do Windows onde os dados do perfil se encontram após ter se logado préviamente no Google Chrome pelo menos uma vez e fechado o browser na sequência. Pode estar na pasta Default, Profle 1 ou Profile 2, etc. Se tiver dúvidas, acesse o link chrome://version pelo próprio navegador para identificar e mude o final do path.
-Na linha 13 do arquivo *Program.cs* também altere a localização onde clonou o projeto na sua máquina.
+   ```bash
+   dotnet add package Selenium.WebDriver.ChromeDriver
+   ```
 
-```csharp
-static string originalProfilePath = @"C:\Users\USUARIO\AppData\Local\Google\Chrome\User Data\Profile 2";
+2. In line 7 of `Program.cs`, update the `originalProfilePath` variable with your actual Windows username and Chrome profile path. Make sure you’ve logged into Chrome at least once and then closed the browser before running the script. Your Chrome profile might be in folders like `Default`, `Profile 1`, `Profile 2`, etc.  
+   To confirm your profile location, open `chrome://version` in your browser and look for the **Profile Path**. Update the path accordingly.  
+   Also, in line 8, update the `clonedProfilePath` to match your local project directory.
 
-static string clonedProfilePath = @"C:\GitHub\SeleniumBotNet9\ChromeUserData";
-```
-3. Na linha 30 do arquivo *Program.cs* valide a localização da instalação do seu Google Chrome no Windows.
+   Example:
 
-```csharp
-options.BinaryLocation = @"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe";
-```
+   ```csharp
+   static string originalProfilePath = @"C:\Users\YOUR_USERNAME\AppData\Local\Google\Chrome\User Data\Profile 2";
+   static string clonedProfilePath = @"C:\GitHub\SeleniumBotNet9\ChromeUserData";
+   ```
 
-4. Na pasta SeleniumBot navegue via comando "cd" até o arquivo *Program.cs* e execute o comando abaixo,
+3. On line 24 of `Program.cs`, confirm the path to your Chrome installation:
 
-```console
-dotnet run .\Program.cs
-```
+   ```csharp
+   options.BinaryLocation = @"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe";
+   ```
 
-5. Na primeiro execução irá gerar a pasta ChromeUserData dentro do próprio projeto, é um clone do seu perfil, feito isso, siga as instruções do Console ou do passo 5.
+4. Open a terminal and navigate via `cd` to the folder containing `Program.cs`, then run the bot:
 
-6. Agora, navegue via CMD/Prompt de comando até o executável do Chrome e execute o comando em sequência para abrir. Logue com seu perfil manualmente e depois feche o browser.
+   ```bash
+   dotnet run .\Program.cs
+   ```
 
-```console
-cd C:\Program Files (x86)\Google\Chrome\Application
-```
+5. On the first run, the app will clone your Chrome profile into the `ChromeUserData` folder. After that, follow the instructions shown in the Console output or continue to the next step.
 
-```console
-chrome.exe --user-data-dir=\"{clonedProfilePath}\" --profile-directory=Default
-```
+6. Open a terminal (CMD/PowerShell) and navigate to your Chrome executable folder. Then run the following command to manually launch Chrome with the cloned profile. Log in to your Google account if needed, then close Chrome.
 
-7. Execute novamente o projeto, aguarde um pouco até a ida para a url https://myactivity.google.com/page?hl=pt_BR&page=youtube_comment_likes e a exclusão de comentários deve iniciar. Em caso de falha, rode o programa novamente e deixe o browser e VS Code abertos sem interação para que não interrompa o processo. Se a página do Google demorar mais que 90 segundos para carregar os likes, limpe o histórico pelo browser ou pela ferramenta da loja de apps da Microsoft "PC Manager" e abra manualmente ela antes de executar essa aplicação para garantir que os likes em comentários estão carregando.
+   ```bash
+   cd "C:\Program Files (x86)\Google\Chrome\Application"
+   ```
 
-```console
-dotnet run .\Program.cs
-```
+   ```bash
+   chrome.exe --user-data-dir="C:\GitHub\SeleniumBotNet9\ChromeUserData" --profile-directory=Default
+   ```
+
+   Replace the path above with your actual `clonedProfilePath`.
+
+7. Run the project again. It will open the URL:
+
+   [https://myactivity.google.com/page?hl=pt_BR&page=youtube_comment_likes](https://myactivity.google.com/page?hl=pt_BR&page=youtube_comment_likes)
+
+   and start deleting the liked comments.
+
+   If the script fails, just run it again. Keep both Chrome and VS Code open, and avoid interacting with the browser while the bot is running to prevent interruptions.
+
+   If the Google page takes more than 90 seconds to load the likes, clear your browser history or use Microsoft's **PC Manager** tool to clean system/cache files. You may also try opening the URL manually before running the script to ensure the liked comments load correctly.
+
+   ```bash
+   dotnet run .\Program.cs
+   ```
