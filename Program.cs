@@ -37,9 +37,14 @@ class Program
             "--new-window"
         });
 
+        var driverService = ChromeDriverService.CreateDefaultService();
+        driverService.HideCommandPromptWindow = true;
+
+        var commandTimeout = TimeSpan.FromMinutes(10);
+
         try
         {
-            using (var driver = new ChromeDriver(options))
+            using (var driver = new ChromeDriver(driverService, options, commandTimeout))
             {
                 Console.WriteLine("Chrome iniciado com perfil clonado.");
 
@@ -47,7 +52,16 @@ class Program
 
                 string url = "https://myactivity.google.com/page?hl=pt_BR&page=youtube_comment_likes";
                 Console.WriteLine($"Navegando para {url}");
-                driver.Navigate().GoToUrl(url);
+                
+                try
+                {
+                    driver.Navigate().GoToUrl(url);
+                }
+                catch (Exception navEx)
+                {
+                    Console.WriteLine($"Erro ao navegar para URL: {navEx.Message}");
+                    return;
+                }
 
                 WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
                 wait.Until(d => ((IJavaScriptExecutor)d).ExecuteScript("return document.readyState").Equals("complete"));
@@ -61,8 +75,8 @@ class Program
 
                 try
                 {
-                    // Espera até 8 min
-                    wait.Timeout = TimeSpan.FromMinutes(8); 
+                    // Espera até 10 min
+                    wait.Timeout = TimeSpan.FromMinutes(10); 
 
                     // Espera até o botão estar presente e clicável
                     botaoX = wait.Until(driver =>
