@@ -40,7 +40,7 @@ class Program
         var driverService = ChromeDriverService.CreateDefaultService();
         driverService.HideCommandPromptWindow = true;
 
-        var commandTimeout = TimeSpan.FromMinutes(3);
+        var commandTimeout = TimeSpan.FromMinutes(3); // Tempo razoável
 
         try
         {
@@ -105,7 +105,7 @@ class Program
 
                 try
                 {
-                    // Espera até 10 min
+                    // Espera até 10 min porque a página do Google Activity fica lenta para carrergar likes em comentários mais antigos
                     wait.Timeout = TimeSpan.FromMinutes(10); 
 
                     // Espera até o botão estar presente e clicável
