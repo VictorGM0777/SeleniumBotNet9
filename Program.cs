@@ -1,20 +1,14 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
-using System;
-using System.IO;
-using System.Threading;
 
 class Program
 {
-    // Caminho do perfil original (ajuste seu usuário e perfil)
     static string originalProfilePath = @"C:\Users\USUARIO\AppData\Local\Google\Chrome\User Data\Profile 2";
-    // Caminho onde o perfil clonado ficará (pasta exclusiva para o bot)
     static string clonedProfilePath = @"C:\GitHub\SeleniumBotNet9\ChromeUserData";
 
-    static void Main(string[] args)
+    static async Task Main(string[] args)
     {
-        // Se não existir o perfil clonado, copia do original
         if (!Directory.Exists(clonedProfilePath))
         {
             Console.WriteLine("Perfil clonado não encontrado, iniciando cópia...");
@@ -23,12 +17,11 @@ class Program
             Console.WriteLine("Agora, abra o Chrome com este perfil para fazer login manualmente:");
             Console.WriteLine($"chrome.exe --user-data-dir=\"{clonedProfilePath}\" --profile-directory=Default");
             Console.WriteLine("Após o login, feche o Chrome e rode este programa novamente.");
-            return; // Termina para você fazer login primeiro
+            return;
         }
 
         var options = new ChromeOptions();
         options.BinaryLocation = @"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe";
-
         options.AddArguments(new[]
         {
             $"--user-data-dir={clonedProfilePath}",
@@ -39,81 +32,82 @@ class Program
 
         var driverService = ChromeDriverService.CreateDefaultService();
         driverService.HideCommandPromptWindow = true;
-
-        var commandTimeout = TimeSpan.FromMinutes(3); // Tempo razoável
+        var commandTimeout = TimeSpan.FromMinutes(3);
 
         try
         {
             using (var driver = new ChromeDriver(driverService, options, commandTimeout))
             {
                 Console.WriteLine("Chrome iniciado com perfil clonado.");
-
                 Thread.Sleep(5000);
 
                 string url = "https://myactivity.google.com/page?hl=pt_BR&page=youtube_comment_likes";
                 Console.WriteLine($"[{DateTime.Now}] Navegando para {url}...");
-                
-                bool carregamentoBemSucedido = false;
-                var timeoutMaximo = TimeSpan.FromMinutes(4); // tempo total tolerável
-                var inicio = DateTime.Now;
 
-                // Thread watchdog para navegação com timeout manual
-                Thread navThread = new Thread(() =>
+                using (var cts = new CancellationTokenSource(TimeSpan.FromMinutes(4)))
                 {
                     try
                     {
-                        driver.Navigate().GoToUrl(url);
-                        carregamentoBemSucedido = true;
+                        var navigationTask = Task.Run(() =>
+                        {
+                            driver.Navigate().GoToUrl(url);
+                        }, cts.Token);
+
+                        await Task.WhenAny(navigationTask, Task.Delay(Timeout.Infinite, cts.Token));
+
+                        if (!navigationTask.IsCompletedSuccessfully)
+                        {
+                            Console.WriteLine("\nTempo de carregamento excedido ou falha na navegação.");
+                            return;
+                        }
+
+                        Console.WriteLine("\nPágina carregada.");
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        Console.WriteLine("\nCarregamento cancelado por timeout.");
+                        return;
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Erro ao carregar URL: {ex.Message}");
+                        Console.WriteLine($"\nErro ao carregar página: {ex.Message}");
+                        return;
                     }
-                });
-
-                navThread.Start();
-
-                while (navThread.IsAlive && (DateTime.Now - inicio) < timeoutMaximo)
-                {
-                    Console.Write(".");
-                    Thread.Sleep(1000); // Progresso visual
                 }
 
-                if (navThread.IsAlive)
-                {
-                    Console.WriteLine("\nTempo excedido. Abortando navegador.");
-                    navThread.Abort(); // cuidado: não recomendado para produção, mas OK em scripts controlados
-                    return;
-                }
-
-                if (!carregamentoBemSucedido)
-                {
-                    Console.WriteLine("Falha ao carregar a página.");
-                    return;
-                }
-
-                Console.WriteLine("\nPágina carregada.");
-
-                // Aguarda DOM completo
                 WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
-                wait.Until(d => ((IJavaScriptExecutor)d).ExecuteScript("return document.readyState").Equals("complete"));
-
+                wait.Until(d =>
+                {
+                    var readyState = ((IJavaScriptExecutor)d).ExecuteScript("return document.readyState") as string;
+                    return readyState != null && readyState.Equals("complete", StringComparison.OrdinalIgnoreCase);
+                });
                 Console.WriteLine("Aguardando botão de deletar ficar disponível...");
 
                 string xpathBotaoX = "/html/body/c-wiz/div/div[2]/c-wiz/c-wiz/div/div[1]/c-wiz[1]/div/div/div[1]/div[2]/div/button";
-                IWebElement botaoX;
+                IWebElement? botaoX;
 
                 try
                 {
-                    // Espera até 10 min porque a página do Google Activity fica lenta para carrergar likes em comentários mais antigos
-                    wait.Timeout = TimeSpan.FromMinutes(10); 
+                    wait.Timeout = TimeSpan.FromMinutes(10);
 
-                    // Espera até o botão estar presente e clicável
                     botaoX = wait.Until(driver =>
                     {
-                        var element = driver.FindElement(By.XPath(xpathBotaoX));
-                        return (element.Displayed && element.Enabled) ? element : null;
+                        try
+                        {
+                            var element = driver.FindElement(By.XPath(xpathBotaoX));
+                            return (element.Displayed && element.Enabled) ? element : null;
+                        }
+                        catch (NoSuchElementException)
+                        {
+                            return null;
+                        }
                     });
+
+                    if (botaoX == null)
+                    {
+                        Console.WriteLine("Botão de deletar não encontrado.");
+                        return;
+                    }
 
                     Console.WriteLine("Botão de deletar encontrado, iniciando processo...");
                 }
@@ -129,26 +123,33 @@ class Program
                 {
                     try
                     {
-                        // Reencontra o botão a cada iteração
                         botaoX = wait.Until(driver =>
                         {
-                            var element = driver.FindElement(By.XPath(xpathBotaoX));
-                            return (element.Displayed && element.Enabled) ? element : null;
+                            try
+                            {
+                                var element = driver.FindElement(By.XPath(xpathBotaoX));
+                                return (element.Displayed && element.Enabled) ? element : null;
+                            }
+                            catch
+                            {
+                                return null;
+                            }
                         });
 
-                        // Scroll até o botão com JavaScript
+                        if (botaoX == null)
+                        {
+                            Console.WriteLine("Nenhum botão restante.");
+                            break;
+                        }
+
                         ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView({ behavior: 'smooth', block: 'center' });", botaoX);
                         Thread.Sleep(1000);
 
-                        // botaoX.Click();
-
-                        // Clique via JavaScript
                         ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", botaoX);
 
                         contador++;
                         Console.WriteLine($"[{contador}] Botão de deletar clicado.");
-
-                        Thread.Sleep(3000); // Aguarda a atualização da interface
+                        Thread.Sleep(3000);
                     }
                     catch (WebDriverTimeoutException)
                     {
@@ -164,7 +165,7 @@ class Program
                     {
                         Console.WriteLine("Elemento stale detectado, tentando novamente...");
                         Thread.Sleep(1000);
-                        continue; // volta ao início do loop para tentar reencontrar o botão
+                        continue;
                     }
                     catch (NoSuchElementException)
                     {
