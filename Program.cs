@@ -40,7 +40,7 @@ class Program
         var driverService = ChromeDriverService.CreateDefaultService();
         driverService.HideCommandPromptWindow = true;
 
-        var commandTimeout = TimeSpan.FromMinutes(10);
+        var commandTimeout = TimeSpan.FromMinutes(3);
 
         try
         {
@@ -51,22 +51,52 @@ class Program
                 Thread.Sleep(5000);
 
                 string url = "https://myactivity.google.com/page?hl=pt_BR&page=youtube_comment_likes";
-                Console.WriteLine($"Navegando para {url}");
+                Console.WriteLine($"[{DateTime.Now}] Navegando para {url}...");
                 
-                try
+                bool carregamentoBemSucedido = false;
+                var timeoutMaximo = TimeSpan.FromMinutes(4); // tempo total tolerável
+                var inicio = DateTime.Now;
+
+                // Thread watchdog para navegação com timeout manual
+                Thread navThread = new Thread(() =>
                 {
-                    driver.Navigate().GoToUrl(url);
+                    try
+                    {
+                        driver.Navigate().GoToUrl(url);
+                        carregamentoBemSucedido = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Erro ao carregar URL: {ex.Message}");
+                    }
+                });
+
+                navThread.Start();
+
+                while (navThread.IsAlive && (DateTime.Now - inicio) < timeoutMaximo)
+                {
+                    Console.Write(".");
+                    Thread.Sleep(1000); // Progresso visual
                 }
-                catch (Exception navEx)
+
+                if (navThread.IsAlive)
                 {
-                    Console.WriteLine($"Erro ao navegar para URL: {navEx.Message}");
+                    Console.WriteLine("\nTempo excedido. Abortando navegador.");
+                    navThread.Abort(); // cuidado: não recomendado para produção, mas OK em scripts controlados
                     return;
                 }
 
+                if (!carregamentoBemSucedido)
+                {
+                    Console.WriteLine("Falha ao carregar a página.");
+                    return;
+                }
+
+                Console.WriteLine("\nPágina carregada.");
+
+                // Aguarda DOM completo
                 WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
                 wait.Until(d => ((IJavaScriptExecutor)d).ExecuteScript("return document.readyState").Equals("complete"));
-
-                Console.WriteLine("Página carregada.");
 
                 Console.WriteLine("Aguardando botão de deletar ficar disponível...");
 
