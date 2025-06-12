@@ -29,11 +29,11 @@ This project contains a bot built using the Selenium package on the .NET 9 SDK w
    Example:
 
    ```csharp
-   static string originalProfilePath = @"C:\Users\YOUR_USERNAME\AppData\Local\Google\Chrome\User Data\Profile 2";
+   static string originalProfilePath = @"C:\Users\USERNAME\AppData\Local\Google\Chrome\User Data\Profile 2";
    static string clonedProfilePath = @"C:\GitHub\SeleniumBotNet9\ChromeUserData";
    ```
 
-3. On line 24 of `Program.cs`, confirm the path to your Chrome installation:
+3. On line 37 of `Program.cs`, confirm the path to your Chrome installation:
 
    ```csharp
    options.BinaryLocation = @"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe";

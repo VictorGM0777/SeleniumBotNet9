@@ -28,7 +28,7 @@ static string originalProfilePath = @"C:\Users\USUARIO\AppData\Local\Google\Chro
 
 static string clonedProfilePath = @"C:\GitHub\SeleniumBotNet9\ChromeUserData";
 ```
-3. Na linha 24 do arquivo *Program.cs* valide a localização da instalação do seu Google Chrome no Windows.
+3. Na linha 37 do arquivo *Program.cs* valide a localização da instalação do seu Google Chrome no Windows.
 
 ```csharp
 options.BinaryLocation = @"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe";
