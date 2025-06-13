@@ -52,23 +52,23 @@ class Program
         try
         {
             driver = new ChromeDriver(driverService, options, commandTimeout);
-            Console.WriteLine("Chrome iniciado com perfil clonado.");
+            Console.WriteLine("\nChrome iniciado com perfil clonado.");
 
             string url = "https://myactivity.google.com/page?hl=pt_BR&page=youtube_comment_likes";
-            Console.WriteLine($"[{DateTime.Now}] Navegando para {url}...");
+            Console.WriteLine($"[{DateTime.Now}] Navegando para {url}");
 
             driver.Navigate().GoToUrl(url);
 
             var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
             wait.Until(d => ((IJavaScriptExecutor)d!).ExecuteScript("return document.readyState")!.Equals("complete"));
 
-            Console.WriteLine("\nPágina carregada.");
+            Console.WriteLine("Página carregada.");
 
-            Console.WriteLine("Aguardando botão de deletar ficar disponível...");
+            Console.WriteLine("Aguardando botão de deletar ficar disponível (pode demorar para muitos likes em comentários de vídeos antigos em 2020 ou menos)...");
 
             string xpathBotaoX = "/html/body/c-wiz/div/div[2]/c-wiz/c-wiz/div/div[1]/c-wiz[1]/div/div/div[1]/div[2]/div/button";
 
-            wait.Timeout = TimeSpan.FromMinutes(10);
+            wait.Timeout = TimeSpan.FromMinutes(15); // ou mais se tiver muitos likes
 
             IWebElement botaoX = wait.Until(d =>
             {
