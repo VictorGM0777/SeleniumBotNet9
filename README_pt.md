@@ -10,14 +10,10 @@ IDE: Visual Studio Code
 
 ## Rodando o código pelo Visual Studio Code após instalação do .NET 9 SDK
 
-1. Instale o Selenium e o driver específico para o navegador Chrome via Terminal:
+1. Faça o build do projeto para instalar as dependências do Selenium e do Chrome WebDriver via terminal, isso irá gerar as pastas bin e obj:
 
 ```console
-dotnet add package Selenium.WebDriver
-```
-
-```console
-dotnet add package Selenium.WebDriver.ChromeDriver
+dotnet build SeleniumBot.csproj
 ```
 
 2. Na linha 7 do arquivo *Program.cs* altere a variável originalProfilePath com seu USUARIO e a pasta do Windows onde os dados do perfil se encontram após ter se logado préviamente no Google Chrome pelo menos uma vez e fechado o browser na sequência. Pode estar na pasta Default, Profle 1 ou Profile 2, etc. Se tiver dúvidas, acesse o link chrome://version pelo próprio navegador para identificar e mude o final do path.

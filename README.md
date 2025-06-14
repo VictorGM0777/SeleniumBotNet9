@@ -12,14 +12,10 @@ This project contains a bot built using the Selenium package on the .NET 9 SDK w
 
 ## Running the Bot in Visual Studio Code (after installing the .NET 9 SDK)
 
-1. Install Selenium and the Chrome WebDriver via terminal:
+1. Build the project to install Selenium and the Chrome WebDriver dependecies via terminal, this is going to generate bin and obj folders:
 
    ```bash
-   dotnet add package Selenium.WebDriver
-   ```
-
-   ```bash
-   dotnet add package Selenium.WebDriver.ChromeDriver
+   dotnet build SeleniumBot.csproj
    ```
 
 2. In line 7 of `Program.cs`, update the `originalProfilePath` variable with your actual Windows username and Chrome profile path. Make sure you’ve logged into Chrome at least once and then closed the browser before running the script. Your Chrome profile might be in folders like `Default`, `Profile 1`, `Profile 2`, etc.  
