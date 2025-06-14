@@ -7,28 +7,28 @@ class Program
     static readonly string originalProfilePath = @"C:\Users\USUARIO\AppData\Local\Google\Chrome\User Data\Profile 2";
     static readonly string clonedProfilePath = @"C:\GitHub\SeleniumBotNet9\ChromeUserData";
 
-    // Declara driver estático para ser acessado no handler Ctrl+C
+    // Declares static driver to be accessed in the Ctrl+C handler
     static ChromeDriver? driver = null;
 
     static void Main(string[] args)
     {
         Console.CancelKeyPress += (sender, e) =>
         {
-            Console.WriteLine("\nCtrl+C detectado! Finalizando driver...");
+            Console.WriteLine("\nCtrl+C detected! Shutting down driver...");
             driver?.Quit();
             driver = null;
-            e.Cancel = true; // cancela encerramento imediato para cleanup
-            Environment.Exit(0); // encerra aplicação
+            e.Cancel = true; // cancels immediate termination to allow cleanup
+            Environment.Exit(0); // terminates the application
         };
 
         if (!Directory.Exists(clonedProfilePath))
         {
-            Console.WriteLine("Perfil clonado não encontrado, iniciando cópia...");
+            Console.WriteLine("Cloned profile not found, starting copy...");
             CopyDirectory(originalProfilePath, clonedProfilePath);
-            Console.WriteLine("Cópia concluída.");
-            Console.WriteLine("Agora, abra o Chrome com este perfil para fazer login manualmente:");
+            Console.WriteLine("Copy completed.");
+            Console.WriteLine("Now, open Chrome with this profile to log in manually:");
             Console.WriteLine($"chrome.exe --user-data-dir=\"{clonedProfilePath}\" --profile-directory=Default");
-            Console.WriteLine("Após o login, feche o Chrome e rode este programa novamente.");
+            Console.WriteLine("After logging in, close Chrome and run this program again.");
             return;
         }
 
@@ -52,23 +52,23 @@ class Program
         try
         {
             driver = new ChromeDriver(driverService, options, commandTimeout);
-            Console.WriteLine("\nChrome iniciado com perfil clonado.");
+            Console.WriteLine("\nChrome started with cloned profile.");
 
             string url = "https://myactivity.google.com/page?hl=pt_BR&page=youtube_comment_likes";
-            Console.WriteLine($"[{DateTime.Now}] Navegando para {url}");
+            Console.WriteLine($"[{DateTime.Now}] Navigating to {url}");
 
             driver.Navigate().GoToUrl(url);
 
             var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
             wait.Until(d => ((IJavaScriptExecutor)d!).ExecuteScript("return document.readyState")!.Equals("complete"));
 
-            Console.WriteLine("Página carregada.");
+            Console.WriteLine("Page loaded.");
 
-            Console.WriteLine("Aguardando botão de deletar ficar disponível (pode demorar para muitos likes em comentários de vídeos antigos em 2020 ou menos)...");
+            Console.WriteLine("Waiting for delete button to become available (may take a while for many likes on old video comments from 2020 or earlier)...");
 
             string xpathBotaoX = "/html/body/c-wiz/div/div[2]/c-wiz/c-wiz/div/div[1]/c-wiz[1]/div/div/div[1]/div[2]/div/button";
 
-            wait.Timeout = TimeSpan.FromMinutes(15); // ou mais se tiver muitos likes
+            wait.Timeout = TimeSpan.FromMinutes(15); // or more if there are many likes
 
             IWebElement botaoX = wait.Until(d =>
             {
@@ -85,11 +85,11 @@ class Program
 
             if (botaoX == null)
             {
-                Console.WriteLine("Botão de deletar não encontrado.");
+                Console.WriteLine("Delete button not found.");
                 return;
             }
 
-            Console.WriteLine("Botão de deletar encontrado, iniciando processo...");
+            Console.WriteLine("Delete button found, starting process...");
 
             int contador = 0;
 
@@ -112,7 +112,7 @@ class Program
 
                     if (botaoX == null)
                     {
-                        Console.WriteLine("Nenhum botão restante.");
+                        Console.WriteLine("No buttons remaining.");
                         break;
                     }
 
@@ -122,40 +122,40 @@ class Program
                     ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", botaoX);
 
                     contador++;
-                    Console.WriteLine($"[{contador}] Botão de deletar clicado.");
+                    Console.WriteLine($"[{contador}] Delete button clicked.");
                     Thread.Sleep(3000);
                 }
                 catch (WebDriverTimeoutException)
                 {
-                    Console.WriteLine("Nenhum botão restante. Lista esvaziada.");
+                    Console.WriteLine("No buttons remaining. List emptied.");
                     break;
                 }
                 catch (ElementClickInterceptedException ex)
                 {
-                    Console.WriteLine($"Erro ao clicar: {ex.Message}");
+                    Console.WriteLine($"Error clicking: {ex.Message}");
                     Thread.Sleep(2000);
                 }
                 catch (StaleElementReferenceException)
                 {
-                    Console.WriteLine("Elemento stale detectado, tentando novamente...");
+                    Console.WriteLine("Stale element detected, retrying...");
                     Thread.Sleep(1000);
                     continue;
                 }
                 catch (NoSuchElementException)
                 {
-                    Console.WriteLine("Nenhum botão restante (NoSuchElementException).");
+                    Console.WriteLine("No buttons remaining (NoSuchElementException).");
                     break;
                 }
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Erro durante execução: {ex.Message}");
+            Console.WriteLine($"Error during execution: {ex.Message}");
             Console.WriteLine($"Stack Trace: {ex.StackTrace}");
         }
         finally
         {
-            Console.WriteLine("Finalizando em 5 segundos...");
+            Console.WriteLine("Shutting down in 5 seconds...");
             Thread.Sleep(5000);
             driver?.Quit();
         }
